@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>chitter dashboard</title>
+</head>
+<body>
+<h1>dashboard</h1>
+<div id="user">loading...</div>
+
+<script>
+fetch('/me', { credentials: 'include' })
+  .then(r => {
+    if (!r.ok) throw new Error("unauthorized")
+    return r.json()
+  })
+  .then(user => {
+    document.getElementById('user').innerText = `Logged in as: ${user.username}`
+    if(user.avatar) {
+      const img = document.createElement('img')
+      img.src = `https://cdn.discordapp.com/avatars/${user.discordId}/${user.avatar}.png`
+      img.width = 80
+      img.height = 80
+      document.body.appendChild(img)
+    }
+  })
+  .catch(() => window.location.href = '/')
+</script>
+</body>
+</html>

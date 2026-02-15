@@ -1,0 +1,28 @@
+{
+  "name": "chitter",
+  "version": "1.0.0",
+  "description": "a better discord alternative.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thecatthatflies/chitter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/thecatthatflies/chitter/issues"
+  },
+  "homepage": "https://github.com/thecatthatflies/chitter#readme",
+  "dependencies": {
+    "axios": "^1.13.5",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3"
+  }
+}
