@@ -1,27 +1,21 @@
-import { sendMessage, sendFriendRequest } from "./api.js";
+// frontend js for future features
+const apiBase = "https://chitterapi.unboundlabs.dev";
 
-document.addEventListener("DOMContentLoaded", () => {
-     const msgForm = document.getElementById("message-form");
-     if (msgForm) {
-          msgForm.addEventListener("submit", async (e) => {
-               e.preventDefault();
-               const toUser = document.getElementById("toUser").value;
-               const content = document.getElementById("content").value;
-               const fromUser = window.localStorage.getItem("username") || "anon";
-               await sendMessage(fromUser, toUser, content);
-               document.getElementById("content").value = "";
-          });
-     }
+// example: fetch friend requests
+export async function fetchFriendRequests(userId) {
+     const res = await fetch(`${apiBase}/friend-requests?userId=${userId}`, {
+          credentials: "include"
+     });
+     return await res.json();
+}
 
-     const frForm = document.getElementById("friend-request-form");
-     if (frForm) {
-          frForm.addEventListener("submit", async (e) => {
-               e.preventDefault();
-               const toUser = document.getElementById("friend-to").value;
-               const fromUser = window.localStorage.getItem("username") || "anon";
-               await sendFriendRequest(fromUser, toUser);
-               document.getElementById("friend-to").value = "";
-               alert("friend request sent!");
-          });
-     }
-});
+// example: send message
+export async function sendMessage(fromUser, toUser, content) {
+     const res = await fetch(`${apiBase}/message`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ fromUser, toUser, content })
+     });
+     return await res.json();
+}
