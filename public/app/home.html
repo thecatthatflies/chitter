@@ -3,25 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>chitter - home</title>
-<link rel="stylesheet" href="/components/style.css">
-<script type="module" src="/components/main.js" defer></script>
+<title>home - chitter</title>
+<link rel="stylesheet" href="/components/css/home.css">
 </head>
 <body>
-<div class="dashboard">
-    <aside class="sidebar">
+<header>
+    <h1>chitter home</h1>
+    <button id="logout">logout</button>
+</header>
+<main>
+    <section id="friends-section">
         <h2>friends</h2>
         <ul id="friends-list"></ul>
-
-        <h2>friend requests</h2>
-        <ul id="friend-requests"></ul>
-
+    </section>
+    <section id="servers-section">
         <h2>servers</h2>
         <ul id="servers-list"></ul>
-    </aside>
-    <main class="content">
-        <h1>Welcome, <span id="username"></span></h1>
-    </main>
-</div>
+    </section>
+    <section id="messages-section">
+        <h2>direct messages</h2>
+        <ul id="dms-list"></ul>
+    </section>
+</main>
+<script type="module" src="/components/js/home.js"></script>
 </body>
 </html>

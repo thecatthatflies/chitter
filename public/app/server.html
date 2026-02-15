@@ -3,24 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>chitter - server</title>
-<link rel="stylesheet" href="/components/style.css">
-<script type="module" src="/components/main.js" defer></script>
+<title>server chat - chitter</title>
+<link rel="stylesheet" href="/components/css/server.css">
 </head>
 <body>
-<div class="server-page">
-    <aside class="sidebar">
-        <h2>members</h2>
-        <ul id="server-members"></ul>
-
-        <h2>channels</h2>
-        <ul id="server-channels"></ul>
-    </aside>
-    <main class="content">
-        <h1 id="server-name"></h1>
-        <div id="server-chat"></div>
-        <input type="text" id="server-chat-input" placeholder="Type a message..." />
-    </main>
-</div>
+<header>
+    <h1 id="server-name">server</h1>
+</header>
+<main>
+    <ul id="chat-list"></ul>
+    <input type="text" id="chat-input" placeholder="message..." />
+    <button id="send-msg">send</button>
+</main>
+<script type="module" src="/components/js/server.js"></script>
 </body>
 </html>
