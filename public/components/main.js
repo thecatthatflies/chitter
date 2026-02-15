@@ -4,14 +4,14 @@ document.addEventListener('DOMContentLoaded', () => {
      const usernameEl = document.getElementById('username');
 
      // fetch user info
-     fetch('https://api.chitter.unboundlabs.dev/api/users/me')
+     fetch('https://chitterapi.unboundlabs.dev/api/users/me')
           .then(r => r.json())
           .then(u => {
                if (usernameEl) usernameEl.textContent = u.username;
           });
 
      // fetch servers
-     fetch('https://api.chitter.unboundlabs.dev/api/servers')
+     fetch('https://chitterapi.unboundlabs.dev/api/servers')
           .then(r => r.json())
           .then(servers => {
                if (serverList) {
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
           });
 
      // fetch friends
-     fetch('https://api.chitter.unboundlabs.dev/api/friends')
+     fetch('https://chitterapi.unboundlabs.dev/api/friends')
           .then(r => r.json())
           .then(friends => {
                if (friendList) {

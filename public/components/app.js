@@ -4,7 +4,7 @@ if (!token && !window.location.href.includes('index.html')) {
 }
 
 export const apiCall = async (url, method = 'GET', body) => {
-     const res = await fetch(`https://api.chitter.unboundlabs.dev${url}`, {
+     const res = await fetch(`https://chitterapi.unboundlabs.dev${url}`, {
           method,
           headers: {
                'Content-Type': 'application/json',
