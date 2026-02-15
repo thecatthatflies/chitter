@@ -6,15 +6,24 @@ const serversListEl = document.getElementById("servers-list");
 const friendRequestsEl = document.getElementById("friend-requests");
 const chatWindow = document.getElementById("chat-window");
 const chatInput = document.getElementById("chat-input");
+const serverMembersEl = document.getElementById("server-members");
+const serverChannelsEl = document.getElementById("server-channels");
+const serverChat = document.getElementById("server-chat");
+const serverChatInput = document.getElementById("server-chat-input");
 
 let currentUser = null;
 
 // ----------------------
-// helper functions
+// helpers
 // ----------------------
 async function fetchJSON(url, opts = {}) {
      const res = await fetch(url, { ...opts, credentials: "include" });
      return await res.json();
+}
+
+function getQueryParam(name) {
+     const params = new URLSearchParams(window.location.search);
+     return params.get(name);
 }
 
 // ----------------------
@@ -108,8 +117,7 @@ export async function loadMessages(toUserId) {
 if (chatInput) {
      chatInput.addEventListener("keypress", async e => {
           if (e.key === "Enter") {
-               const urlParams = new URLSearchParams(window.location.search);
-               const toUserId = urlParams.get("user");
+               const toUserId = getQueryParam("user");
                if (!toUserId || !currentUser) return;
                const content = chatInput.value;
                await fetchJSON(`${apiBase}/message`, {
@@ -124,10 +132,76 @@ if (chatInput) {
 }
 
 // ----------------------
+// server page
+// ----------------------
+export async function loadServer(serverId) {
+     if (!currentUser) await getCurrentUser();
+     const serverData = await fetchJSON(`${apiBase}/server/${serverId}`);
+     if (!serverData) return;
+     if (serverName) serverName.textContent = serverData.name;
+
+     if (!serverMembersEl || !serverChannelsEl) return;
+
+     serverMembersEl.innerHTML = "";
+     serverData.members.forEach(m => {
+          const li = document.createElement("li");
+          li.textContent = m.username;
+          serverMembersEl.appendChild(li);
+     });
+
+     serverChannelsEl.innerHTML = "";
+     serverData.channels.forEach(c => {
+          const li = document.createElement("li");
+          li.textContent = c.name;
+          li.addEventListener("click", () => loadServerChannelMessages(serverId, c.id));
+          serverChannelsEl.appendChild(li);
+     });
+}
+
+// ----------------------
+// server chat
+// ----------------------
+export async function loadServerChannelMessages(serverId, channelId) {
+     const messages = await fetchJSON(`${apiBase}/server/${serverId}/channel/${channelId}/messages`);
+     if (!serverChat) return;
+     serverChat.innerHTML = "";
+     messages.forEach(m => {
+          const div = document.createElement("div");
+          div.className = m.from.id === currentUser.id ? "msg-sent" : "msg-received";
+          div.textContent = m.content;
+          serverChat.appendChild(div);
+     });
+}
+
+if (serverChatInput) {
+     serverChatInput.addEventListener("keypress", async e => {
+          if (e.key === "Enter") {
+               const serverId = getQueryParam("server");
+               const channelId = getQueryParam("channel");
+               if (!serverId || !channelId || !currentUser) return;
+               const content = serverChatInput.value;
+               await fetchJSON(`${apiBase}/server/${serverId}/channel/${channelId}/message`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ fromUser: currentUser.id, content })
+               });
+               serverChatInput.value = "";
+               loadServerChannelMessages(serverId, channelId);
+          }
+     });
+}
+
+// ----------------------
 // initial load
 // ----------------------
 getCurrentUser().then(() => {
      loadFriends();
      loadServers();
      loadFriendRequests();
+
+     const serverId = getQueryParam("server");
+     if (serverId) loadServer(serverId);
+
+     const toUserId = getQueryParam("user");
+     if (toUserId) loadMessages(toUserId);
 });

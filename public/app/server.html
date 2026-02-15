@@ -2,26 +2,25 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>chitter | server</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>chitter - server</title>
 <link rel="stylesheet" href="/components/style.css">
-<script src="/components/server.js" defer></script>
-<script src="/components/messages.js" defer></script>
-<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<script type="module" src="/components/main.js" defer></script>
 </head>
 <body>
-<div class="app-container">
-  <aside class="sidebar">
-    <h3>members</h3>
-    <ul id="member-list"></ul>
-    <button id="invite-btn"><i class="fas fa-link"></i> invite</button>
-  </aside>
-  <main class="content chat-area">
-    <div id="chat-messages" class="chat-messages"></div>
-    <div class="chat-input">
-      <input type="text" id="chat-input" placeholder="type a message">
-      <button id="send-btn">send</button>
-    </div>
-  </main>
+<div class="server-page">
+    <aside class="sidebar">
+        <h2>members</h2>
+        <ul id="server-members"></ul>
+
+        <h2>channels</h2>
+        <ul id="server-channels"></ul>
+    </aside>
+    <main class="content">
+        <h1 id="server-name"></h1>
+        <div id="server-chat"></div>
+        <input type="text" id="server-chat-input" placeholder="Type a message..." />
+    </main>
 </div>
 </body>
 </html>
