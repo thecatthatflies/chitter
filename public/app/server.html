@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>chitter | server</title>
+<link rel="stylesheet" href="/components/style.css">
+<script src="/components/server.js" defer></script>
+<script src="/components/messages.js" defer></script>
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="app-container">
+  <aside class="sidebar">
+    <h3>members</h3>
+    <ul id="member-list"></ul>
+    <button id="invite-btn"><i class="fas fa-link"></i> invite</button>
+  </aside>
+  <main class="content chat-area">
+    <div id="chat-messages" class="chat-messages"></div>
+    <div class="chat-input">
+      <input type="text" id="chat-input" placeholder="type a message">
+      <button id="send-btn">send</button>
+    </div>
+  </main>
+</div>
+</body>
+</html>
