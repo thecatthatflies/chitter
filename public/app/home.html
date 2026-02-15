@@ -2,33 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>chitter home</title>
-  <link rel="stylesheet" href="/components/style.css">
-  <script type="module" src="/components/app.js" defer></script>
-  <script type="module" src="/components/friends.js" defer></script>
-  <script type="module" src="/components/servers.js" defer></script>
+  <link rel="stylesheet" href="../components/style.css">
 </head>
 <body>
-  <header>
-    <h2>chitter dashboard</h2>
-    <span id="username"></span>
-  </header>
-  <main>
-    <section class="friends-panel">
-      <h3>friends</h3>
-      <ul id="friends-list"></ul>
-      <input id="friend-add-input" placeholder="friend id">
-      <button id="friend-add-btn">add friend</button>
-    </section>
+  <div class="navbar">
+    <span>username</span>
+    <a href="/">logout</a>
+  </div>
+  <div class="container">
+    <h2>friends</h2>
+    <ul id="friends-list"></ul>
 
-    <section class="servers-panel">
-      <h3>servers</h3>
-      <ul id="servers-list"></ul>
-      <input id="server-name-input" placeholder="server name">
-      <button id="server-create-btn">create server</button>
-      <input id="invite-code-input" placeholder="invite code">
-      <button id="server-join-btn">join server</button>
-    </section>
-  </main>
+    <h2>servers</h2>
+    <ul id="servers-list"></ul>
+  </div>
+  <script type="module" src="../components/main.js"></script>
 </body>
 </html>

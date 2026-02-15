@@ -1,38 +1,27 @@
-document.addEventListener('DOMContentLoaded', () => {
-     const serverList = document.getElementById('server-list');
-     const friendList = document.getElementById('friend-list');
-     const usernameEl = document.getElementById('username');
+import { sendMessage, sendFriendRequest } from "./api.js";
 
-     // fetch user info
-     fetch('https://chitterapi.unboundlabs.dev/api/users/me')
-          .then(r => r.json())
-          .then(u => {
-               if (usernameEl) usernameEl.textContent = u.username;
+document.addEventListener("DOMContentLoaded", () => {
+     const msgForm = document.getElementById("message-form");
+     if (msgForm) {
+          msgForm.addEventListener("submit", async (e) => {
+               e.preventDefault();
+               const toUser = document.getElementById("toUser").value;
+               const content = document.getElementById("content").value;
+               const fromUser = window.localStorage.getItem("username") || "anon";
+               await sendMessage(fromUser, toUser, content);
+               document.getElementById("content").value = "";
           });
+     }
 
-     // fetch servers
-     fetch('https://chitterapi.unboundlabs.dev/api/servers')
-          .then(r => r.json())
-          .then(servers => {
-               if (serverList) {
-                    servers.forEach(s => {
-                         const li = document.createElement('li');
-                         li.textContent = s.name;
-                         serverList.appendChild(li);
-                    });
-               }
+     const frForm = document.getElementById("friend-request-form");
+     if (frForm) {
+          frForm.addEventListener("submit", async (e) => {
+               e.preventDefault();
+               const toUser = document.getElementById("friend-to").value;
+               const fromUser = window.localStorage.getItem("username") || "anon";
+               await sendFriendRequest(fromUser, toUser);
+               document.getElementById("friend-to").value = "";
+               alert("friend request sent!");
           });
-
-     // fetch friends
-     fetch('https://chitterapi.unboundlabs.dev/api/friends')
-          .then(r => r.json())
-          .then(friends => {
-               if (friendList) {
-                    friends.forEach(f => {
-                         const li = document.createElement('li');
-                         li.textContent = f;
-                         friendList.appendChild(li);
-                    });
-               }
-          });
+     }
 });
