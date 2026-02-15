@@ -1,0 +1,66 @@
+body {
+  font-family: "Segoe UI", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #2f3136;
+  color: #ffffff;
+}
+
+header {
+  background: #202225;
+  padding: 15px;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+#main {
+  display: flex;
+  height: calc(100vh - 60px);
+}
+
+#sidebar {
+  width: 220px;
+  background: #2f3136;
+  border-right: 1px solid #202225;
+  padding: 10px;
+}
+
+#sidebar h2 {
+  font-size: 1rem;
+  margin-top: 0;
+}
+
+#chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+#messages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.message {
+  background: #40444b;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  border-radius: 5px;
+  max-width: 70%;
+}
+
+#input {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #202225;
+}
+
+#input input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 5px;
+  border: none;
+  background: #40444b;
+  color: #ffffff;
+}

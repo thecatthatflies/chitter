@@ -3,28 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <title>chitter dashboard</title>
+<link rel="stylesheet" href="/components/style.css">
 </head>
 <body>
-<h1>dashboard</h1>
-<div id="user">loading...</div>
+<header>chitter</header>
+<div id="main">
+  <div id="sidebar">
+    <h2>Servers</h2>
+    <ul>
+      <li># general</li>
+      <li># random</li>
+    </ul>
+    <h2>Friends</h2>
+    <ul>
+      <li>Alice</li>
+      <li>Bob</li>
+    </ul>
+  </div>
+  <div id="chat">
+    <div id="messages">
+      <div class="message">welcome to chitter!</div>
+    </div>
+    <div id="input">
+      <input type="text" placeholder="type a message..." disabled>
+    </div>
+  </div>
+</div>
 
-<script>
-fetch('/me', { credentials: 'include' })
-  .then(r => {
-    if (!r.ok) throw new Error("unauthorized")
-    return r.json()
-  })
-  .then(user => {
-    document.getElementById('user').innerText = `Logged in as: ${user.username}`
-    if(user.avatar) {
-      const img = document.createElement('img')
-      img.src = `https://cdn.discordapp.com/avatars/${user.discordId}/${user.avatar}.png`
-      img.width = 80
-      img.height = 80
-      document.body.appendChild(img)
-    }
-  })
-  .catch(() => window.location.href = '/')
-</script>
+<script src="/components/dashboard.js"></script>
 </body>
 </html>
