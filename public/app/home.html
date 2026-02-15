@@ -1,23 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>chitter home</title>
-  <link rel="stylesheet" href="../components/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>chitter - home</title>
+<link rel="stylesheet" href="/components/style.css">
+<script type="module" src="/components/main.js" defer></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-  <div class="navbar">
-    <span>username</span>
-    <a href="/">logout</a>
-  </div>
-  <div class="container">
-    <h2>friends</h2>
-    <ul id="friends-list"></ul>
-
-    <h2>servers</h2>
-    <ul id="servers-list"></ul>
-  </div>
-  <script type="module" src="../components/main.js"></script>
+<div class="dashboard">
+    <aside class="sidebar">
+        <h2>friends</h2>
+        <ul id="friends-list"></ul>
+        <h2>servers</h2>
+        <ul id="servers-list"></ul>
+    </aside>
+    <main class="content">
+        <h1>welcome, <span id="username"></span></h1>
+        <div id="friend-requests-container">
+            <h3>friend requests</h3>
+            <ul id="friend-requests"></ul>
+        </div>
+    </main>
+</div>
 </body>
 </html>
