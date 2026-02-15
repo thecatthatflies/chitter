@@ -1,27 +1,23 @@
-document.addEventListener('DOMContentLoaded', () => {
-     const input = document.getElementById('chat-input');
-     const sendBtn = document.getElementById('send-btn');
-     const chatBox = document.getElementById('chat-messages');
+import { apiCall } from './app.js';
 
-     if (input && sendBtn && chatBox) {
-          sendBtn.addEventListener('click', sendMessage);
-          input.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
+export const messagesContainer = document.getElementById('messages-container');
+export const messageInput = document.getElementById('message-input');
 
-          function sendMessage() {
-               const msg = input.value.trim();
-               if (!msg) return;
-               const p = document.createElement('p');
-               p.textContent = msg;
-               chatBox.appendChild(p);
-               input.value = '';
-               chatBox.scrollTop = chatBox.scrollHeight;
+let channelId = 'global'; // example default
 
-               // send to backend
-               fetch('https://api.chitter.unboundlabs.dev/api/messages', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content: msg })
-               });
-          }
+export const fetchMessages = async () => {
+     const messages = await apiCall(`/api/messages/${channelId}`);
+     messagesContainer.innerHTML = messages.map(m => `<div><b>${m.sender}</b>: ${m.content}</div>`).join('');
+};
+fetchMessages();
+setInterval(fetchMessages, 2000);
+
+messageInput.addEventListener('keydown', async (e) => {
+     if (e.key === 'Enter') {
+          const content = messageInput.value.trim();
+          if (!content) return;
+          await apiCall('/api/messages', 'POST', { content, channelId });
+          messageInput.value = '';
+          fetchMessages();
      }
 });
