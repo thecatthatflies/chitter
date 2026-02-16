@@ -1,17 +1,32 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>chitter</title>
-<link rel="stylesheet" href="/components/css/main.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="chitter frontend for Discord-authenticated chat messaging.">
+<title>chitter | Welcome</title>
+<link rel="stylesheet" href="./components/css/main.css">
 </head>
 <body>
-<div class="landing-container">
-    <h1>chitter</h1>
-    <p>chat with friends, servers, and more</p>
-    <a class="btn" href="/login">login with discord</a>
+<header class="topbar">
+<a class="brand" href="./index.html">chitter</a>
+<nav class="topnav" aria-label="Primary">
+<a href="./login.html">Login</a>
+<a href="./home.html">Home</a>
+</nav>
+</header>
+<main class="landing">
+<section class="panel landing-panel">
+<p class="eyebrow">Realtime conversations</p>
+<h1>Chat with friends and servers on chitter.</h1>
+<p>Authenticate with Discord and connect to the production API at <strong>chitterapi.unboundlabs.dev</strong>.</p>
+<div class="actions">
+<a class="btn" href="./login.html">Login with Discord</a>
+<a class="btn btn-secondary" href="./home.html">Open Home</a>
 </div>
-<script src="/components/js/main.js" type="module"></script>
+</section>
+</main>
+<footer class="page-footer">Ready for static deployment on Vercel or any modern host.</footer>
+<script src="./components/js/main.js" defer></script>
 </body>
 </html>

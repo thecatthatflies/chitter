@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Server chat view for chitter.">
+<title>chitter | Server</title>
+<link rel="stylesheet" href="./components/css/main.css">
+<link rel="stylesheet" href="./components/css/server.css">
+</head>
+<body>
+<header class="topbar">
+<a class="brand" href="./index.html">chitter</a>
+<nav class="topnav" aria-label="Primary">
+<a href="./home.html">Home</a>
+<a class="active" href="./server.html">Server</a>
+</nav>
+</header>
+<main class="server-layout">
+<section class="panel chat-panel">
+<div class="chat-head">
+<h1 id="server-title">Server Chat</h1>
+<button id="refresh-messages" class="btn btn-secondary" type="button">Refresh</button>
+</div>
+<p id="server-state" class="status status-loading" aria-live="polite">Loading messages...</p>
+<p id="server-error" class="status hidden" aria-live="polite"></p>
+<ul id="server-messages" class="message-list"></ul>
+</section>
+<form id="message-form" class="send-form">
+<input id="message-input" class="field" type="text" placeholder="Type a message..." maxlength="2000" autocomplete="off" required>
+<button id="send-message" class="btn" type="submit">Send</button>
+</form>
+<p id="send-state" class="status hidden" aria-live="polite"></p>
+</main>
+<script src="./components/js/main.js" defer></script>
+<script src="./components/js/server.js" defer></script>
+</body>
+</html>

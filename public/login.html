@@ -1,16 +1,34 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>login - chitter</title>
-<link rel="stylesheet" href="/components/css/login.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Login page for chitter using Discord OAuth.">
+<title>chitter | Login</title>
+<link rel="stylesheet" href="./components/css/main.css">
+<link rel="stylesheet" href="./components/css/login.css">
 </head>
 <body>
-<div class="login-container">
-    <h1>login</h1>
-    <button id="discord-login" class="btn">login with discord</button>
+<header class="topbar">
+<a class="brand" href="./index.html">chitter</a>
+<nav class="topnav" aria-label="Primary">
+<a href="./index.html">Landing</a>
+<a href="./home.html">Home</a>
+</nav>
+</header>
+<main class="login-main">
+<section class="panel login-card">
+<h1>Login with Discord</h1>
+<p>Use your Discord account to access chitter securely.</p>
+<div class="login-actions">
+<button id="discord-login" class="btn" type="button">Login with Discord</button>
+<p id="login-status" class="status hidden" aria-live="polite"></p>
+<p id="login-error" class="status hidden" aria-live="polite"></p>
 </div>
-<script type="module" src="/components/js/login.js"></script>
+</section>
+</main>
+<footer class="page-footer">OAuth endpoints: <code>/auth/discord</code> and <code>/auth/discord/callback</code>.</footer>
+<script src="./components/js/main.js" defer></script>
+<script src="./components/js/login.js" defer></script>
 </body>
 </html>

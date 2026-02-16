@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Chitter dashboard with friends, servers, and recent messages.">
+<title>chitter | Home</title>
+<link rel="stylesheet" href="./components/css/main.css">
+<link rel="stylesheet" href="./components/css/home.css">
+</head>
+<body>
+<header class="topbar">
+<a class="brand" href="./index.html">chitter</a>
+<nav class="topnav" aria-label="Primary">
+<a href="./index.html">Landing</a>
+<a class="active" href="./home.html">Home</a>
+<a href="./server.html">Server</a>
+<button id="logout-btn" class="btn btn-secondary" type="button">Logout</button>
+</nav>
+</header>
+<main class="home-layout">
+<section class="panel profile-panel">
+<div class="user-card">
+<img id="user-avatar" class="avatar" src="" alt="User avatar">
+<div>
+<h2 id="user-name">Guest</h2>
+<p id="user-id" class="muted">Not signed in</p>
+</div>
+</div>
+<form id="friend-request-form" class="form-stack">
+<label for="friend-request-input">Send Friend Request</label>
+<input id="friend-request-input" class="field" type="text" placeholder="Friend username or ID" maxlength="120" autocomplete="off">
+<button class="btn" type="submit">Send Request</button>
+<p id="friend-request-state" class="status hidden" aria-live="polite"></p>
+</form>
+<p id="home-error" class="status hidden" aria-live="polite"></p>
+</section>
+<section class="panel home-panel">
+<h2>Friends</h2>
+<p id="friends-state" class="status status-loading" aria-live="polite">Loading friends...</p>
+<ul id="friends-list" class="entity-list"></ul>
+</section>
+<section class="panel home-panel">
+<h2>Servers</h2>
+<p id="servers-state" class="status status-loading" aria-live="polite">Loading servers...</p>
+<ul id="servers-list" class="entity-list"></ul>
+</section>
+<section class="panel home-panel">
+<h2>Recent Messages</h2>
+<p id="messages-state" class="status status-loading" aria-live="polite">Loading recent messages...</p>
+<ul id="recent-messages-list" class="message-list"></ul>
+</section>
+</main>
+<script src="./components/js/main.js" defer></script>
+<script src="./components/js/home.js" defer></script>
+</body>
+</html>

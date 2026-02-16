@@ -1,0 +1,12 @@
+.server-layout{max-width:920px;margin:0 auto;display:grid;gap:1rem}
+.chat-panel{padding:1rem}
+.chat-head{display:flex;align-items:center;justify-content:space-between;gap:.7rem;margin-bottom:.6rem}
+.chat-head h1{margin:0;font-size:1.2rem}
+#server-messages{max-height:56vh;overflow-y:auto;border:1px solid var(--border);border-radius:12px;background:rgba(4,10,16,.35)}
+#server-messages .entity-item{align-items:flex-start}
+.message-bubble{display:flex;flex-direction:column;gap:.2rem}
+.message-body{color:var(--text);white-space:pre-wrap;word-break:break-word}
+.message-time{font-size:.78rem;color:var(--muted)}
+.send-form{display:flex;align-items:center;gap:.6rem}
+.send-form .field{flex:1}
+@media (max-width:700px){.send-form{flex-direction:column;align-items:stretch}#send-message{width:100%}}
