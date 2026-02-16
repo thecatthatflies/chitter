@@ -18,23 +18,18 @@
     logoutBtn: document.getElementById("logout-btn"),
   };
   const asArray = (value) => (Array.isArray(value) ? value : []);
-  const initials = (value) =>
-    String(value || "U")
-      .trim()
-      .slice(0, 1)
-      .toUpperCase();
+  const initials = (value) => String(value || "U").trim().slice(0, 1).toUpperCase();
   const fallbackAvatar = (value) =>
     `https://api.dicebear.com/9.x/initials/svg?seed=${encodeURIComponent(value || "chitter")}`;
-  const unauthorized = (response) => {
-    if (response.status === 401 || response.status === 403) {
-      api.clearAuth();
-      api.navigate("login.html");
-      return true;
-    }
-    return false;
-  };
-  const setProfile = () => {
-    const user = api.getUser();
+  const isLikelyUserId = (value) =>
+    /^[0-9]+$/.test(value) ||
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      value,
+    );
+  const isUnauthorized = (response) => response && response.status === 401;
+  const normalizeId = (value, fallback = "n/a") =>
+    value === undefined || value === null || value === "" ? fallback : String(value);
+  const setProfile = (user) => {
     if (!user) {
       api.setStatus(
         el.homeError,
@@ -51,7 +46,13 @@
     if (el.name) el.name.textContent = userName;
     if (el.id) el.id.textContent = `ID: ${user.id || "n/a"}`;
   };
+  const normalizeFriend = (friend, index) => ({
+    id: normalizeId(friend.id || friend.userId || friend.friendId, `friend-${index + 1}`),
+    username: friend.username || friend.user || friend.name || `Friend ${index + 1}`,
+    avatarUrl: friend.avatarUrl || friend.avatar || friend.profileImage,
+  });
   const renderFriends = (friends) => {
+    if (!el.friendsList) return;
     el.friendsList.innerHTML = "";
     if (!friends.length) {
       api.setStatus(el.friendsState, "No friends yet.", "");
@@ -69,9 +70,7 @@
       avatar.className = "avatar";
       avatar.src =
         friend.avatarUrl ||
-        fallbackAvatar(
-          friend.username || friend.id || initials(friend.username),
-        );
+        fallbackAvatar(friend.username || friend.id || initials(friend.username));
       avatar.alt = `${friend.username || "Friend"} avatar`;
       const line = document.createElement("div");
       line.className = "friend-line";
@@ -88,24 +87,12 @@
       el.friendsList.appendChild(item);
     });
   };
-  const deriveServers = (messages) => {
-    const map = new Map();
-    messages.forEach((message) => {
-      const id = message.serverId || message.server || message.channelId;
-      const name = message.serverName || message.server || "";
-      if (!id) return;
-      const normalizedId = String(id);
-      if (!map.has(normalizedId))
-        map.set(normalizedId, {
-          id: normalizedId,
-          name: name || `Server ${map.size + 1}`,
-        });
-    });
-    if (map.size === 0)
-      map.set("global", { id: "global", name: "Global Feed" });
-    return Array.from(map.values());
-  };
+  const normalizeServer = (server, index) => ({
+    id: normalizeId(server.id || server.serverId || server._id, `server-${index + 1}`),
+    name: server.name || server.serverName || `Server ${index + 1}`,
+  });
   const renderServers = (servers) => {
+    if (!el.serversList) return;
     el.serversList.innerHTML = "";
     if (!servers.length) {
       api.setStatus(el.serversState, "No servers available.", "");
@@ -125,7 +112,7 @@
         serverId: server.id,
         name: server.name,
       });
-      link.href = `server.html?${params.toString()}`;
+      link.href = `/server?${params.toString()}`;
       const line = document.createElement("div");
       line.className = "server-line";
       const name = document.createElement("span");
@@ -141,14 +128,28 @@
       el.serversList.appendChild(item);
     });
   };
+  const extractMessageTimestamp = (message) =>
+    message.createdAt || message.timestamp || message.sentAt || message.updatedAt;
+  const extractMessageAuthor = (message) =>
+    message.sender ||
+    message.author ||
+    message.fromUser ||
+    message.fromUsername ||
+    message.username ||
+    "Unknown Sender";
   const renderMessages = (messages) => {
+    if (!el.messagesList) return;
     el.messagesList.innerHTML = "";
     if (!messages.length) {
       api.setStatus(el.messagesState, "No recent messages found.", "");
       return;
     }
     const recent = [...messages]
-      .sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0))
+      .sort(
+        (a, b) =>
+          new Date(extractMessageTimestamp(b) || 0) -
+          new Date(extractMessageTimestamp(a) || 0),
+      )
       .slice(0, 20);
     api.setStatus(
       el.messagesState,
@@ -162,13 +163,14 @@
       line.className = "message-line";
       const author = document.createElement("span");
       author.className = "message-author";
-      author.textContent = message.sender || "Unknown Sender";
+      author.textContent = extractMessageAuthor(message);
       const content = document.createElement("span");
       content.className = "message-content";
       content.textContent = message.content || "";
       const meta = document.createElement("span");
       meta.className = "message-meta";
-      meta.textContent = api.formatTime(message.timestamp) || "Unknown time";
+      meta.textContent =
+        api.formatTime(extractMessageTimestamp(message)) || "Unknown time";
       line.appendChild(author);
       line.appendChild(content);
       line.appendChild(meta);
@@ -178,9 +180,9 @@
   };
   const loadFriends = async () => {
     api.setStatus(el.friendsState, "Loading friends...", "status-loading");
-    const response = await api.apiFetch("/friend/list");
+    const response = await api.apiFetch("/friends/list");
     if (!response.ok) {
-      if (unauthorized(response)) return;
+      if (isUnauthorized(response)) return;
       api.setStatus(
         el.friendsState,
         response.error || "Unable to load friends right now.",
@@ -188,24 +190,37 @@
       );
       return;
     }
-    const friends = asArray(response.data && response.data.friends);
+    const friends = asArray(response.data && response.data.friends).map(
+      normalizeFriend,
+    );
     renderFriends(friends);
   };
-  const loadServersAndMessages = async () => {
+  const loadServers = async () => {
     api.setStatus(el.serversState, "Loading servers...", "status-loading");
-    api.setStatus(
-      el.messagesState,
-      "Loading recent messages...",
-      "status-loading",
-    );
-    const response = await api.apiFetch("/message/list");
+    const response = await api.apiFetch("/servers/list");
     if (!response.ok) {
-      if (unauthorized(response)) return;
+      if (isUnauthorized(response)) return;
       api.setStatus(
         el.serversState,
         response.error || "Unable to load servers.",
         "status-error",
       );
+      return;
+    }
+    const servers = asArray(response.data && response.data.servers).map(
+      normalizeServer,
+    );
+    renderServers(servers);
+  };
+  const loadMessages = async () => {
+    api.setStatus(
+      el.messagesState,
+      "Loading recent messages...",
+      "status-loading",
+    );
+    const response = await api.apiFetch("/messages/list");
+    if (!response.ok) {
+      if (isUnauthorized(response)) return;
       api.setStatus(
         el.messagesState,
         response.error || "Unable to load recent messages.",
@@ -214,7 +229,6 @@
       return;
     }
     const messages = asArray(response.data && response.data.messages);
-    renderServers(deriveServers(messages));
     renderMessages(messages);
   };
   const submitFriendRequest = async (event) => {
@@ -233,15 +247,13 @@
       "Sending friend request...",
       "status-loading",
     );
-    const payload = /^[0-9a-fA-F-]{6,}$/.test(raw)
-      ? { friendId: raw }
-      : { username: raw };
-    const response = await api.apiFetch("/friend/request", {
+    const payload = isLikelyUserId(raw) ? { toUserId: raw } : { toUser: raw };
+    const response = await api.apiFetch("/friends/request", {
       method: "POST",
       body: payload,
     });
     if (!response.ok) {
-      if (unauthorized(response)) return;
+      if (isUnauthorized(response)) return;
       api.setStatus(
         el.friendState,
         response.error || "Unable to send friend request.",
@@ -254,21 +266,31 @@
   };
   const bindEvents = () => {
     if (el.logoutBtn)
-      el.logoutBtn.addEventListener("click", () => {
-        api.clearAuth();
-        api.navigate("login.html");
+      el.logoutBtn.addEventListener("click", async () => {
+        el.logoutBtn.disabled = true;
+        const response = await api.logout();
+        if (!response.ok && response.status !== 401) {
+          api.setStatus(
+            el.homeError,
+            response.error ||
+              "Logged out locally, but the server session may still be active.",
+            "status-error",
+          );
+        }
+        api.navigate(api.config.routes.login, { replace: true });
       });
     if (el.friendForm)
       el.friendForm.addEventListener("submit", submitFriendRequest);
   };
   const loadDashboard = async () => {
     api.setStatus(el.homeError, "", "");
-    await Promise.all([loadFriends(), loadServersAndMessages()]);
+    await Promise.all([loadFriends(), loadServers(), loadMessages()]);
   };
-  document.addEventListener("DOMContentLoaded", () => {
-    if (!api.requireAuth("login.html")) return;
+  document.addEventListener("DOMContentLoaded", async () => {
+    const canViewProtectedPage = await api.guardRoute("protected");
+    if (!canViewProtectedPage) return;
     bindEvents();
-    setProfile();
+    setProfile(api.getAuthState().user);
     loadDashboard();
   });
 })();
