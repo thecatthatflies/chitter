@@ -4,7 +4,9 @@
   "description": "chitter frontend served by express",
   "main": "server/server.js",
   "scripts": {
-    "start": "node server/server.js"
+    "start": "node server/server.js",
+    "format": "prettier --write .",
+    "format-all": "prettier --write . && eslint --fix ."
   },
   "repository": {
     "type": "git",
@@ -21,6 +23,12 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.1.4",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "prettier": "^3.8.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.0.0",
+    "globals": "^17.3.0"
   }
 }
